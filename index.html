@@ -1118,32 +1118,39 @@ h1 {
 </div>
 
 <script>
-const youtubeChannelId = "UCfAC3QYUzStFVOA3Ka2_uiQ";
-const youtubeSearchQuery = "Nikhil Kushwah";
-const videoGrid = document.getElementById("videoGrid");
-const channelEmbedUrl = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(youtubeSearchQuery)}`;
+const videos = [
+    "ktNK6SUh6po",
+    "Ozh3C57WIFU",
+    "65AA0vYsgNo",
+    "UFxYqiSClmI",
+    "oHMUnCxVijY&t",
+    "yPvDlX1yUec",
+    "FMRv0njY6M8",
+    "DGcBj6XW0Ik"
+];
 
-for (let i = 0; i < 8; i++) {
+const videoGrid = document.getElementById("videoGrid");
+
+videos.forEach((videoId, index) => {
     const card = document.createElement("div");
     card.className = "video-card";
 
     const iframe = document.createElement("iframe");
-    iframe.setAttribute("src", channelEmbedUrl);
-    iframe.setAttribute("title", "YouTube video");
-    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-    iframe.setAttribute("allowfullscreen", "true");
 
-    const link = document.createElement("a");
-    link.className = "youtube-link";
-    link.href = `https://www.youtube.com/channel/${youtubeChannelId}`;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = "Open Channel";
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+    iframe.title = `Nikhil Kushwah Project ${index + 1}`;
+
+    iframe.setAttribute(
+        "allow",
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    );
+
+    iframe.setAttribute("allowfullscreen", "");
 
     card.appendChild(iframe);
-    card.appendChild(link);
+
     videoGrid.appendChild(card);
-}
+});
 
 const username = "nikhilkush078";
 
