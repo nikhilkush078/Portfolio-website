@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nikhil Kushwah</title>
+
+<style>
+:root {
+    --bg: #f7f9fc;
+    --text: #20242c;
+    --text-soft: #52606d;
+    --text-muted: #69778a;
+    --border: #dce4ea;
+    --card-bg: #ffffff;
+    --card-bg-soft: #eef6ff;
+    --accent: #ff402a;
+    --accent-2: #102a43;
+    --accent-3: #00a6ff;
+    --light-bg: #eef6ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1400px;
+    margin: auto;
+    background-image: linear-gradient(rgba(244, 246, 248, 0.88), rgba(244, 247, 248, 0.203)), url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text);
+    padding: 30px 20px;
+}
+
+.site-shell {
+    background: rgba(254, 255, 241, 0.788);
+    border: 1px solid #cfd7dd;
+    border-radius: 0;
+    padding: 26px;
+    box-shadow: none;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.banner-wrap { width: 100%; }
+.top-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 10 / 1;
+    object-fit: cover;
+    box-shadow: 0 2px 12px rgba(16, 42, 67, 0.16);
+    border:#93d0ff 1px solid;
+}
+
+.brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #bfdcf0, #dff7ec);
+    border: 2px solid #eefcfb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--accent-2);
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.hi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+}
+
+h1 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 2px 0 4px;
+    font-size: clamp(34px, 4vw, 44px);
+    line-height: 1.0;
+    color: var(--accent-2);
+}
+
+.header-text {
+    font-size: 15px;
+    color: var(--text-soft);
+}
+
+.hero-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.meta-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 0;
+    background: #eef5f8;
+    border: 1px solid #aebfc9;
+    color: var(--accent-2);
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.meta-chip:nth-child(2) {
+    background: #eff2f5;
+    border-color: #bfcbd5;
+}
+
+.meta-chip:nth-child(3) {
+    background: #eef5f8;
+    border-color: #aebfc9;
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 4px 10px;
+    border-bottom: 5px solid var(--border);
+    border-color: #0e8790;
+}
+
+/* Scrolling logo marquee (appears above navbar) */
+.logo-marquee-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.85);
+}
+.logo-marquee {
+    display: flex;
+    align-items: center;
+    gap: 24px;         /* Reduced gap slightly */
+    padding: 4px 0;    /* Reduced vertical padding (was 10px 0) */
+    white-space: nowrap;
+}
+.logo-marquee img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    filter: none; /* show full-color logos */
+    opacity: 1;
+}
+
+.logo-marquee img { background: white; padding: 6px; border-radius: 6px; box-shadow: 0 2px 6px rgba(16,42,67,0.08); display: inline-block; }
+.marquee-track {
+    display: flex;
+    gap: 24px;         /* Matched gap with container */
+    align-items: center;
+    animation: marquee 28s linear infinite;
+}
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--accent-2);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 16px;
+    border-radius: 0;
+    border: 1px solid transparent;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    background: var(--accent-2);
+    color: white;
+    border-color: var(--accent-2);
+}
+
+.h2-main {
+    margin-top: 34px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+}
+
+.content-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.92fr) minmax(640px, 2fr);
+    gap: 28px;
+    margin-top: 24px;
+}
+
+.about-panel {
+    background: #eef7f8;
+    border-radius: 0;
+    border: 1px solid #b9d1d7;
+    padding: 24px;
+    min-height: 420px;
+    box-shadow: none;
+}
+
+.about-panel h2 {
+    margin: 0 0 12px;
+    padding: 0;
+    border: none;
+    font-size: 25px;
+    color: var(--accent-2);
+}
+
+.about-panel .about-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 0;
+    margin-bottom: 16px;
+    background: #dcecf1;
+    border: 4px solid white;
+    box-shadow: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-panel .about-image span {
+    font-size: 40px;
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+.about-panel p {
+    color: var(--text-soft);
+    line-height: 1.78;
+    font-size: 14px;
+}
+
+.about-list {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.about-list li {
+    padding: 9px 0;
+    border-top: 1px solid var(--border);
+    color: var(--text-soft);
+    font-size: 13px;
+}
+
+.about-list li:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.main-content {
+    min-width: 0;
+}
+
+.page-section {
+    display: none;
+}
+
+.page-section.active-section {
+    display: block;
+}
+
+.section-head {
+    margin-top: 28px;
+    margin-bottom: 12px;
+}
+
+.section-head h2 {
+    font-size: clamp(30px, 3vw, 38px);
+    color: var(--accent-2);
+    margin: 0 0 10px;
+}
+
+.section-head p {
+    color: var(--text-soft);
+    margin: 0;
+}
+
+.video-panel,
+.repo-panel,
+.info-panel,
+.project-panel,
+.tool-panel,
+.contact-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 20px;
+    box-shadow: none;
+    margin-top: 12px;
+}
+
+.panel-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--accent-2);
+}
+
+.video-panel {
+    overflow: hidden;
+}
+
+.video-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: stretch;
+}
+
+.video-card {
+    background: #eef7fd;
+    border-radius: 0;
+    padding: 10px;
+    border: 1px solid #bfdcf0;
+    flex: 1 1 180px;
+    max-width: 240px;
+    min-width: 160px;
+    box-sizing: border-box;
+}
+
+.video-card iframe {
+    width: 100%;
+    height: 180px;
+    border: none;
+    border-radius: 0;
+    display: block;
+}
+
+.youtube-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--accent-2);
+    text-decoration: none;
+}
+
+.repo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+}
+
+.repo-card {
+    background: #fff;
+    border-radius: 0;
+    border: 1px solid var(--border);
+    padding: 14px;
+    min-height: 150px;
+}
+
+.repo-card .repo-name {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.repo-card .repo-name a {
+    color: var(--accent-2);
+    text-decoration: none;
+}
+
+.repo-card .repo-description {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.repo-card .repo-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+.featured-project-box {
+    background: #10364a;
+    color: white;
+    border-radius: 0;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #b3d6ef;
+}
+
+.featured-project-box h3 {
+    margin-top: 0;
+}
+
+.featured-project-box p {
+    margin-bottom: 0;
+    color: #d9f1ff;
+}
+
+.featured-project-box a {
+    color: white;
+    font-weight: 700;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: minmax(230px, 0.52fr) minmax(660px, 1.48fr);
+    gap: 24px;
+}
+
+.home-about-card {
+    background: #eef7f8;
+    border-radius: 0;
+    border: 1px solid #bfdaca;
+    padding: 22px;
+    max-width: 300px;
+    width: 100%;
+}
+
+.home-about-card .about-image {
+    width: 100%;
+    max-width: 220px;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+    
+    
+    margin: 0 auto 18px;
+    background: #dfeef4;
+}
+
+.home-about-card h2 {
+    margin: 0 0 14px;
+    color: var(--accent-2);
+}
+
+.home-about-card p {
+    color: var(--text-soft);
+    line-height: 1.72;
+}
+
+.home-about-card .about-title {
+    font-size: 30px;
+    margin: 0 0 12px;
+}
+
+.home-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.home-mini-card {
+    border-radius: 0;
+    border: 1px solid var(--border);
+    background: white;
+    padding: 14px;
+}
+
+.home-mini-card h3 {
+    margin: 0 0 10px;
+    color: var(--accent-2);
+}
+
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.stat-box {
+    background: var(--light-bg);
+    border: 1px solid #c0dce7;
+    border-radius: 0;
+    padding: 12px;
+}
+
+.stat-box strong {
+    display: block;
+    color: var(--accent-2);
+    font-size: 24px;
+}
+
+.stat-box span {
+    font-size: 11px;
+    color: var(--text-soft);
+}
+
+.resume-button,
+.secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: var(--accent-2);
+    color: white;
+    padding: 11px 18px;
+    border-radius: 0;
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.secondary-button {
+    background: #eaf6fa;
+    color: var(--accent-2);
+    border: 1px solid #a9d5e8;
+}
+
+.info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.info-grid article {
+    flex: 1 1 260px;
+}
+
+.drive-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.drive-photo-card {
+    width: 110px;
+    height: 110px;
+    background: #eaf1f4;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    color: var(--accent-2);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.drive-photo-card span {
+    display: block;
+    margin-top: 8px;
+}
+
+.drive-photo-card:hover {
+    background: #dcecf1;
+    border-color: var(--accent-2);
+}
+
+.drive-link-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.drive-link-row a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    color: var(--accent-2);
+    background: #eef7f8;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.drive-link-row a:hover {
+    background: var(--accent-2);
+    color: white;
+}
+
+.info-card {
+    background: white;
+    border-radius: 0;
+    border: 1px solid var(--border);
+    padding: 14px;
+}
+
+.info-card h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: var(--accent-2);
+}
+
+.info-card p,
+.info-card li {
+    color: var(--text-soft);
+    line-height: 1.55;
+    font-size: 13px;
+}
+
+.info-card ul {
+    padding-left: 18px;
+}
+
+.image-panel {
+    border-radius: 0;
+    background: #163b49;
+    min-height: 250px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.image-panel .image-placeholder {
+    position: absolute;
+    inset: 0;
+    background-image: url('about.jpeg');
+    background-size: cover;
+    
+    /* Lock the top of the image to the top of the box */
+    background-position: top center; 
+    background-repeat: no-repeat;
+}
+
+.image-panel-content {
+    position: relative;
+    z-index: 2;
+    padding: 10px;
+    color: rgb(255, 255, 255);
+    margin-top: 300px; /* Push content down to avoid overlapping the image */
+    font-size: 30px;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    padding-bottom: 5px;
+    line-height: 1.0;
+}
+
+.project-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: stretch;
+    width: 100%;
+}
+
+.project-grid article {
+    flex: 1 1 280px;
+}
+
+.project-card {
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background: white;
+    overflow: hidden;
+}
+
+.project-card .project-image {
+    height: 170px;
+    background: #e8eef2;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+.project-card .project-text {
+    padding: 14px;
+}
+
+.project-card h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: var(--accent-2);
+}
+
+.project-card p {
+    color: var(--text-soft);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* News-article style project entries */
+.project-article {
+    width: 100%;
+    border: none;
+    background: transparent;
+    overflow: visible;
+    display: block;
+    padding: 0 0 30px 0;
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    font-width: 600;
+}
+.project-hero {
+    width: 100%;
+    height: auto;
+    max-height: 720px;
+    display: block;
+    object-fit: cover;
+    background: #e8eef2;
+}
+.project-body {
+    padding: 18px 0;
+}
+.project-body h3 {
+    margin: 0 0 12px;
+    font-size: 28px;
+    color: var(--accent-2);
+}
+.project-body p {
+    color: var(--text-soft);
+    line-height: 1.8;
+    margin-bottom: 14px;
+    font-size: 16px;
+}
+.github-button {
+    display: inline-block;
+    padding: 10px 16px;
+    background: var(--accent-2);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+}
+.github-button:hover { opacity: 0.95; }
+
+.tool-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.tool-grid article {
+    flex: 1 1 280px;
+}
+
+.tool-card {
+    border-radius: 0;
+    border: 1px solid var(--border);
+    background: white;
+    padding: 16px;
+}
+
+.tool-card h3 {
+    margin: 0 0 10px;
+    color: var(--accent-2);
+}
+
+.tool-card p {
+    color: var(--text-soft);
+    font-size: 13px;
+    line-height: 1.58;
+}
+
+.tool-card iframe {
+    width: 100%;
+    min-height: 230px;
+    border-radius: 0;
+    border: none;
+    background: #07151c;
+    margin-top: 12px;
+}
+
+.tool-card a {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 700;
+    color: var(--accent-2);
+}
+
+.contact-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.contact-layout article {
+    flex: 1 1 320px;
+}
+
+.contact-list {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.contact-list li {
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+    color: var(--text-soft);
+}
+
+.contact-list li:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.contact-form {
+    display: grid;
+    gap: 12px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 0;
+    border: 1px solid var(--border);
+    font-family: inherit;
+}
+
+.contact-form button {
+    width: fit-content;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 0;
+    background: var(--accent-2);
+    color: white;
+    font-weight: 700;
+}
+
+.footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+/* Resume embed A4 preview */
+.resume-embed { margin-top: 12px; display:flex; justify-content:center; }
+.resume-preview { width: 794px; height: 1123px; max-width: 100%; border: 1px solid var(--border); box-shadow: 0 6px 18px rgba(16,42,67,0.08); background: white; }
+
+@media (max-width: 780px) {
+    .video-grid,
+    .repo-grid,
+    .info-grid,
+    .project-grid,
+    .tool-grid,
+    .contact-layout,
+    .home-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+<div class="site-shell">
+    <header class="topbar">
+        <div class="banner-wrap">
+            <!-- 10:1 ratio placeholder banner; replace with your edited banner image when ready -->
+            <img class="top-banner" src="top.png" alt="Nikhil Kushwah banner">
+        </div>
+    </header>
+
+    <div class="logo-marquee-wrap">
+        <div class="marquee-track" aria-hidden="true">
+            <!-- first set -->
+            <div class="logo-marquee">
+                <img src="https://cdn.simpleicons.org/arduino/00979D" alt="Arduino">
+                <img src="https://logo.clearbit.com/freecadweb.org" alt="FreeCAD">
+                <img src="https://cdn.simpleicons.org/raspberrypi/C51A4A" alt="Raspberry Pi">
+                <img src="https://cdn.simpleicons.org/linux/FCC624" alt="Linux">
+                <img src="https://cdn.simpleicons.org/visualstudiocode/007ACC" alt="VS Code">
+                <img src="https://logo.clearbit.com/labcenter.com" alt="Proteus">
+                <img src="https://logo.clearbit.com/easyeda.com" alt="EasyEDA">
+                <img src="https://cdn.simpleicons.org/github/181717" alt="GitHub">
+                <img src="https://cdn.simpleicons.org/python/3776AB" alt="Python">
+                <img src="https://logo.clearbit.com/pygame.org" alt="Pygame">
+                <img src="https://cdn.simpleicons.org/canva/00C4CC" alt="Canva">
+                <img src="https://cdn.simpleicons.org/adobephotoshop/31A8FF" alt="Photoshop">
+            </div>
+            <!-- duplicate set for seamless loop -->
+            <div class="logo-marquee">
+                <img src="https://cdn.simpleicons.org/arduino/00979D" alt="Arduino">
+                <img src="https://logo.clearbit.com/freecadweb.org" alt="FreeCAD">
+                <img src="https://cdn.simpleicons.org/raspberrypi/C51A4A" alt="Raspberry Pi">
+                <img src="https://cdn.simpleicons.org/linux/FCC624" alt="Linux">
+                <img src="https://cdn.simpleicons.org/visualstudiocode/007ACC" alt="VS Code">
+                <img src="https://logo.clearbit.com/labcenter.com" alt="Proteus">
+                <img src="https://logo.clearbit.com/easyeda.com" alt="EasyEDA">
+                <img src="https://cdn.simpleicons.org/github/181717" alt="GitHub">
+                <img src="https://cdn.simpleicons.org/python/3776AB" alt="Python">
+                <img src="https://logo.clearbit.com/pygame.org" alt="Pygame">
+                <img src="https://cdn.simpleicons.org/canva/00C4CC" alt="Canva">
+                <img src="https://cdn.simpleicons.org/adobephotoshop/31A8FF" alt="Photoshop">
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <a class="active" href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#tools">Custom Tools</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <section id="home" class="page-section active-section">
+        <div class="section-head">
+            <h2>Home</h2>
+            <p>Electrical Engineering Student | Practical Projects</p>
+        </div>
+
+        <div class="home-layout">
+            <aside class="home-about-card">
+                <img class="about-image" src="about_home.jpeg" alt="Nikhil Kushwah portrait">
+                <h2 class="about-title">About Me</h2>
+                <p>Electrical Engineering student with extensive practical experience in hands-on testing and circuit experimentation. Passionate about bringing theoretical concepts to life through breadboard prototyping, custom tool development, and microcontroller integration. Focused on building reliable, well-tested hardware and smart systems.</p>
+                
+                <a class="resume-button" href="resume.pdf" target="_blank">View Resume</a>
+            </aside>
+
+            <div class="home-stack">
+                <div class="video-panel">
+                    <div class="panel-title">YouTube Video Highlights</div>
+                    <div class="video-grid" id="videoGrid"></div>
+                </div>
+
+                <div class="repo-panel">
+                    <div class="panel-title">GitHub Highlights</div>
+                    <div class="repo-grid" id="repos"></div>
+                    <div class="featured-project-box">
+                        <h3>Featured Project</h3>
+                        <p><a href="https://github.com/nikhilkush078" target="_blank">View the main GitHub profile</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="page-section">
+        <div class="section-head">
+            <h2>About</h2>
+            <p>General information, resume, photos, and achievements.</p>
+        </div>
+
+        <div class="info-grid">
+            <article class="info-panel">
+                <div class="panel-title">General Information</div>
+                <p>I am an Electrical Engineering student currently in my 7th semester, interested in real-world problem solving and engineering applications.</p>
+                <p>My focus includes smart systems, embedded control, automation, electronics testing, and GitHub-driven project development.</p>
+                <ul class="about-list">
+                    <li><strong>Field:</strong> Electrical Engineering</li>
+                    <li><strong>Semester:</strong> 7th Semester</li>
+                    <li><strong>Core Interest:</strong> Embedded Systems, Automation, Hardware Projects</li>
+                    <li><strong>Current Learning:</strong> IoT, Electronics, GitHub Projects, Circuit Design</li>
+                </ul>
+            </article>
+
+            <article class="image-panel">
+                <div class="image-placeholder"></div>
+                <div class="image-panel-content">
+                    <h3>Nikhil Kushwah</h3>
+                    <p>Blive Me! I can do it!</p>
+                </div>
+            </article>
+        </div>
+
+        <div class="info-grid" style="margin-top:16px;">
+            <article class="info-panel">
+                <div class="panel-title">Resume</div>
+                <p>My resume will highlight academic background, project work, tools, and engineering interests.</p>
+                <div class="drive-link-row">
+                    <a href="https://drive.google.com/file/d/1O9w7XVwUlac6WoHIql2kPS6hFHoE4rOv/view?usp=sharing" target="_blank">Open Resume Folder</a>
+                </div>
+            </article>
+
+            <article class="info-panel">
+                <div class="panel-title">Photos</div>
+                <div class="drive-gallery">
+                    <a class="drive-photo-card" href="https://drive.google.com/drive/folders/PHOTO_FOLDER_ID" target="_blank">
+                        <span>Photo Gallery</span>
+                    </a>
+                    <a class="drive-photo-card" href="https://drive.google.com/drive/folders/PHOTO_FOLDER_ID" target="_blank">
+                        <span>Lab Photos</span>
+                    </a>
+                    <a class="drive-photo-card" href="https://drive.google.com/drive/folders/PHOTO_FOLDER_ID" target="_blank">
+                        <span>Project Photos</span>
+                    </a>
+                </div>
+            </article>
+
+            <article class="info-panel">
+                <div class="panel-title">Achievements</div>
+                <ul>
+                    <li>Engineering project work and GitHub portfolio</li>
+                    <li>Practical electronics and smart systems learning</li>
+                    <li>Electrical engineering developments and study work</li>
+                </ul>
+                <div class="drive-link-row">
+                    <a href="https://drive.google.com/drive/folders/ACHIEVEMENTS_FOLDER_ID" target="_blank">Achievement Photos</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="info-grid" style="margin-top:12px;">
+            <article class="info-panel" id="resume-embed-panel">
+                <div class="panel-title">Resume Preview</div>
+                <p>Your resume (PDF) will render below in A4 size if resume.pdf is placed next to this HTML file.</p>
+                <div class="resume-embed">
+                    <iframe class="resume-preview" src="resume.pdf" type="application/pdf" frameborder="0" title="Resume PDF preview"></iframe>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section id="projects" class="page-section">
+        <div class="section-head">
+            <h2>Top Projects</h2>
+            <p>Latest engineering work, technical experiments, and project updates.</p>
+        </div>
+
+        <div class="project-grid">
+            <article class="project-article">
+                <h3>Campus Autonomous Navigation & Delivery Vehicle </h3>
+                <img class="project-hero" src="sim_V.png" alt="Smart Automation System">
+                <p>Designed, architected, and deployed a robust computer vision-driven autonomous control framework engineered for real-time obstacle perception, spatial awareness, and dynamic path navigation. The core perception pipeline combined traditional OpenCV image processing techniques for lane and edge tracking with custom-trained YOLO (You Only Look Once) object recognition models, fine-tuned to classify and track dynamic obstacles such as pedestrians, bicycles, and urban debris under varying lighting conditions.Originally, the software architecture was conceptualized and simulated for a full-scale passenger campus shuttle. To evaluate system viability, test hardware-software integration constraints, and minimize deployment risk, the full vision and control stack was scaled and ported onto a functional, medium-sized autonomous delivery robot prototype. This transition required building a responsive interface between high-level vision inferencing and low-level motor microcontrollers.The physical platform underwent rigorous, multi-phase field testing across active university campus environments. The deployment successfully validated point-to-point payload delivery capabilities, proving the vision stack’s real-time reliability, low-latency decision-making, and structural resilience when navigating unstructured, unpredictable human environments.</p>
+                <a class="github-button" href="https://github.com/nikhilkush078/SMART-AUTOMATION" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            </article>
+
+            <article class="project-article">
+                <h3>Spark Detection and Automatic Power Cutoff System</h3>
+                <img class="project-hero" src="short_circuit_protection.png" alt="Embedded Systems Lab Work">
+                <p>Designed, engineered, and implemented an embedded electrical safety system designed to detect hazardous AC outlet arcing by capturing and analyzing high-frequency power line noise on an Arduino microcontroller platform. Electrical arc faults—a leading cause of structural electrical fires—generate distinct high-frequency transient signatures along the AC voltage waveform. The system continuously monitors these line distortions to differentiate dangerous arcing events from benign switching noise created by standard household loads.To achieve reliable, real-time detection without risking component failure, the system utilizes an analog signal-conditioning front-end to safely isolate high-frequency spectral components while protecting the low-voltage microcontroller logic. Custom embedded algorithms process the incoming voltage signatures, detecting micro-sparks and sporadic breakdown voltage patterns before thermal accumulation can ignite surrounding materials.Upon identifying a verified arc condition, the controller immediately executes a hardware safety routine, energizing a high-speed relay to trip the primary circuit and physically isolate the fault. By interrupting power within milliseconds of initial spark formation, the prototype dramatically lowers high-current hazards, offering an accessible, low-cost approach to arc-fault circuit protection.</p>
+                <a class="github-button" href="https://github.com/nikhilkush078/EMBEDDED-LAB" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            </article>
+
+            <article class="project-article">
+                <h3>Embedded System and Control Panel For Complex Systems</h3>
+                <img class="project-hero" src="speed_control.png" alt="Power & Control Concept">
+                <p>Designed and built an end-to-end mechatronic control platform featuring a custom graphical user interface (GUI) developed in Python (Tkinter) that interfaces seamlessly with an Arduino microcontroller via high-speed serial (UART) communication. The desktop interface provides real-time telemetry, manual actuation controls, and dynamic parameter tuning, enabling centralized, user-friendly control over complex underlying hardware.On the hardware side, the system controls a high-torque mechanical powertrain utilizing a DC motor paired with a multi-stage gear system. Pulse-Width Modulation (PWM) and dedicated driver circuits were implemented to achieve precise speed regulation and torque management under varying load conditions. Concurrently, the firmware manages multi-axis servo motor actuation for articulate mechanical positioning alongside an array of electrical sensors (such as rotary encoders, current monitoring, or optical distance sensors).To ensure seamless performance, the embedded firmware and host software were optimized for non-blocking execution, allowing real-time processing of high-frequency sensor streams without introducing latency into motor control loops. The end result is a unified, scalable hardware-in-the-loop (HIL) platform capable of precise, synchronized actuation across complex mechanical assemblies.</p>
+                <a class="github-button" href="https://github.com/nikhilkush078/POWER-CONTROL" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            </article>
+
+            <article class="project-article">
+                <h3>Grid-Tie Inverter System</h3>
+                <img class="project-hero" src="grid_tie_inverter.png" alt="Grid-Tie Inverter System">
+                <p>Designed, constructed, and tested a prototype grid-tie inverter system utilizing an Arduino microcontroller to safely convert low-voltage DC into synchronized AC power for grid injection. To overcome the critical challenge of matching grid phase and frequency, the system incorporates an optocoupler-based Zero-Crossing Detection (ZCD) circuit. This provides full galvanic isolation between high-voltage AC mains and sensitive low-voltage microcontroller logic while feeding microsecond-accurate phase signals to the controller.The power conversion stage employs a low-frequency center-tapped transformer topology driven by high-current power MOSFETs configured for push-pull switching. The Arduino executes phase-locked control routines, generating precise Pulse-Width Modulation (PWM) signals aligned with the utility grid's voltage waveform. High-capacity DC-link capacitors stabilize voltage input, while custom gate-drive circuits ensure crisp MOSFET switching transitions to minimize conduction and switching losses.To support continuous power delivery under heavy current loads, the hardware layout integrates heavy-duty aluminum heatsinks for passive thermal management, protecting power semiconductors against thermal runaway. The completed prototype demonstrates accurate phase tracking, safe optical isolation, and stable DC-to-AC power transformation tailored for renewable energy and localized microgrid applications.</p>
+                <a class="github-button" href="https://github.com/nikhilkush078" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            </article>
+        </div>
+    </section>
+
+    <section id="tools" class="page-section">
+        <div class="section-head">
+            <h2>Custom Tools</h2>
+            <p>Live utility tools and project explainers.</p>
+        </div>
+
+        <div class="tool-grid">
+            <article class="tool-card">
+                <h3>Thyristor Waveform Simulator</h3>
+                <p>An interactive simulation tool designed to visualize and analyze output voltage and current waveforms of phase-controlled thyristor rectifiers across variable firing angles ($\alpha$) and load configurations.</p>
+                <iframe src="https://youtu.be/HKksYjdvkUM" allowfullscreen></iframe>
+                <a href="https://sati-ee-thyristor-waveform-simulator.onrender.com" target="_blank">Open Tool</a>
+            </article>
+
+            <article class="tool-card">
+                <h3>Transformer Designer</h3>
+                <p>An engineering tool designed to calculate optimal magnetic core dimensions, flux density, turn ratios, and winding parameters for custom power and high-frequency transformer design.</p>
+                <iframe src="https://youtu.be/dTZPQyAsHbo" title="Tool explanation video" allowfullscreen></iframe>
+                <a href="https://sati-ee-transformer-designer.onrender.com/" target="_blank">Open Tool</a>
+            </article>
+        </div>
+    </section>
+
+    <section id="contact" class="page-section">
+        <div class="section-head">
+            <h2>Contact</h2>
+            <p>Connect with me for engineering collaboration, internships, or project discussions.</p>
+        </div>
+
+        <div class="contact-layout">
+            <article class="contact-panel">
+                <div class="panel-title">Contact Details</div>
+                <ul class="contact-list">
+                    <li><strong>Email:</strong> nikhilkushwah078@example.
+                        com</li>
+                    <li><strong>Phone:</strong> +91 7987260228</li>
+                    <li><strong>GitHub:</strong> https://github.com/nikhilkush078</li>
+                    <li><strong>LinkedIn:</strong> Nikhil Kushwah</li>
+                    <li><strong>Location:</strong> Sati Vidiha / India</li>
+                </ul>
+            </article>
+
+            <article class="contact-panel">
+                <div class="panel-title">Send a Message</div>
+                <div class="contact-form">
+                    <input type="text" placeholder="Your Name" />
+                    <input type="email" placeholder="Your Email" />
+                    <textarea rows="5" placeholder="Write your message"></textarea>
+                    <button type="button">Submit</button>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 Nikhil Kushwah | Electrical Engineering Portfolio</p>
+    </footer>
+</div>
+
+<script>
+const youtubeChannelId = "UCfAC3QYUzStFVOA3Ka2_uiQ";
+const youtubeSearchQuery = "Nikhil Kushwah";
+const videoGrid = document.getElementById("videoGrid");
+const channelEmbedUrl = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(youtubeSearchQuery)}`;
+
+for (let i = 0; i < 8; i++) {
+    const card = document.createElement("div");
+    card.className = "video-card";
+
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("src", channelEmbedUrl);
+    iframe.setAttribute("title", "YouTube video");
+    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+    iframe.setAttribute("allowfullscreen", "true");
+
+    const link = document.createElement("a");
+    link.className = "youtube-link";
+    link.href = `https://www.youtube.com/channel/${youtubeChannelId}`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open Channel";
+
+    card.appendChild(iframe);
+    card.appendChild(link);
+    videoGrid.appendChild(card);
+}
+
+const username = "nikhilkush078";
+
+fetch(`https://api.github.com/users/${username}/repos`)
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("repos");
+    container.innerHTML = ""; // Clear container before adding cards
+
+    // Filter repos with a non-empty description and slice the first 8
+    const filteredRepos = data
+      .filter(repo => repo.description && repo.description.trim() !== "")
+      .slice(0, 8);
+
+    if (filteredRepos.length === 0) {
+      container.innerHTML = "No GitHub repositories with a description found.";
+      return;
+    }
+
+    // Loop through the 8 repositories and create a card for each
+    filteredRepos.forEach(repo => {
+      const repoCard = document.createElement("div");
+      repoCard.className = "repo-card";
+
+      repoCard.innerHTML = `
+        <div class="repo-name">
+            <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+        </div>
+        <div class="repo-description">${repo.description}</div>
+      `;
+
+      container.appendChild(repoCard);
+    });
+  })
+  .catch(error => {
+    console.error("GitHub fetch failed", error);
+    const container = document.getElementById("repos");
+    container.innerHTML = "Unable to load GitHub repositories.";
+  });
+
+const navLinks = document.querySelectorAll('.navbar a');
+const sections = document.querySelectorAll('.page-section');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        const targetId = link.getAttribute('href');
+
+        sections.forEach(section => {
+            section.classList.toggle('active-section', section.id === targetId.replace('#', ''));
+        });
+
+        navLinks.forEach(item => item.classList.toggle('active', item === link));
+    });
+});
+
+    // Logo fallback: if a logo image fails to load, replace with a simple-icons SVG via jsDelivr
+    document.querySelectorAll('.logo-marquee img').forEach(img => {
+        img.addEventListener('error', () => {
+            const map = {
+                'Arduino': 'arduino',
+                'FreeCAD': 'freecad',
+                'Raspberry Pi': 'raspberrypi',
+                'Linux': 'linux',
+                'VS Code': 'visualstudiocode',
+                'Proteus': 'proteus',
+                'EasyEDA': 'easyeda',
+                'GitHub': 'github',
+                'Python': 'python',
+                'Pygame': 'pygame',
+                'Canva': 'canva',
+                'Photoshop': 'adobephotoshop'
+            };
+
+            const key = img.alt || '';
+            const slug = map[key];
+            if (slug) {
+                img.src = `https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/${slug}.svg`;
+                img.removeEventListener('error', this);
+            } else {
+                img.src = 'https://placehold.co/48x48?text=?';
+            }
+        });
+    });
+</script>
+</body>
+</html>
