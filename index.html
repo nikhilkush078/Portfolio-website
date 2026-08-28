@@ -858,6 +858,22 @@ h1 {
         grid-template-columns: 1fr;
     }
 }
+
+/* Admin editor and modal styles for Projects & Observations */
+.admin-controls { display:flex; gap:8px; align-items:center }
+.observations-list { display:flex; flex-direction:column; gap:18px; margin-top:12px }
+.obs-card { border:1px solid var(--border); background:white; padding:14px }
+.obs-card h3 { margin:0 0 8px; color:var(--accent-2) }
+.obs-card .obs-meta { font-size:12px; color:var(--text-muted); margin-bottom:10px }
+.obs-thumbs { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
+.obs-thumbs img { max-width:180px; max-height:140px; object-fit:cover; border:1px solid var(--border) }
+.modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(16,42,67,0.45); z-index:9999 }
+.modal .modal-box { width:90%; max-width:900px; background:white; padding:18px; border:1px solid var(--border) }
+.modal .modal-box input[type="text"], .modal .modal-box textarea { width:100%; padding:10px; border:1px solid var(--border); margin-bottom:10px }
+.modal .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px }
+.image-preview { display:flex; gap:8px; flex-wrap:wrap }
+.small-btn { padding:8px 12px; font-size:13px; border-radius:0 }
+
 </style>
 </head>
 <body>
@@ -908,6 +924,7 @@ h1 {
         <a class="active" href="#home">Home</a>
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
+        <a href="#observations">Projects & Observations</a>
         <a href="#tools">Custom Tools</a>
         <a href="#contact">Contact</a>
     </nav>
@@ -942,6 +959,25 @@ h1 {
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section id="observations" class="page-section">
+        <div class="section-head">
+            <h2>Projects & Observations</h2>
+            <p>Daily research articles, images, and notes — addable via the admin UI.</p>
+        </div>
+
+        <div class="project-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="panel-title">Projects & Observations</div>
+                <div class="admin-controls">
+                    <button id="adminLoginBtn" class="secondary-button">Admin Login</button>
+                    <button id="addPostBtn" class="secondary-button" style="display:none">Add</button>
+                </div>
+            </div>
+
+            <div id="observationsList" class="observations-list"></div>
         </div>
     </section>
 
@@ -1283,6 +1319,572 @@ navLinks.forEach(link => {
             }
         });
     });
+
+            // Projects & Observations — Client-side editor using localStorage
+    function initObservations() {
+    console.log('Observations: initObservations running');
+    try {
+
+    const STORAGE_KEY = "observations_posts_v1";
+    const ADMIN_SESSION_KEY = "observations_is_admin";
+
+    const adminBtn = document.getElementById("adminLoginBtn");
+    const addBtn = document.getElementById("addPostBtn");
+    const listEl = document.getElementById("observationsList");
+
+    // Check required HTML elements
+    if (!adminBtn || !addBtn || !listEl) {
+        console.error("Observations system error: Required HTML elements are missing.");
+        console.error("Required IDs: adminLoginBtn, addPostBtn, observationsList");
+        return;
+    }
+
+    let posts = [];
+    let isAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === "true";
+
+    // Defensive: ensure admin and add buttons are usable and attach fallback handlers
+    try {
+        if (adminBtn) {
+            adminBtn.type = 'button';
+            adminBtn.disabled = false;
+            adminBtn.style.pointerEvents = 'auto';
+        }
+        if (addBtn) {
+            addBtn.type = 'button';
+            addBtn.disabled = false;
+            addBtn.style.pointerEvents = 'auto';
+        }
+    } catch (e) {
+        console.warn('Could not apply defensive attributes to admin controls', e);
+    }
+
+    // --------------------------------------------------
+    // LOAD POSTS
+    // --------------------------------------------------
+
+    function loadPosts() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            posts = saved ? JSON.parse(saved) : [];
+
+            if (!Array.isArray(posts)) {
+                posts = [];
+            }
+
+        } catch (error) {
+            console.error("Could not load posts:", error);
+            posts = [];
+        }
+    }
+
+    // --------------------------------------------------
+    // SAVE POSTS
+    // --------------------------------------------------
+
+    function savePosts() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        } catch (error) {
+            console.error("Could not save posts:", error);
+            alert("Could not save the post. Browser storage may be full.");
+        }
+    }
+
+    // --------------------------------------------------
+    // UPDATE ADMIN UI
+    // --------------------------------------------------
+
+    function ensureUI() {
+
+        if (isAdmin) {
+            addBtn.style.display = "inline-block";
+            adminBtn.textContent = "Admin (signed in)";
+        } else {
+            addBtn.style.display = "none";
+            adminBtn.textContent = "Admin Login";
+        }
+    }
+
+    // --------------------------------------------------
+    // RENDER POSTS
+    // --------------------------------------------------
+
+    function renderPosts() {
+
+        listEl.innerHTML = "";
+
+        if (posts.length === 0) {
+
+            const empty = document.createElement("div");
+            empty.className = "obs-card";
+            empty.textContent = isAdmin
+                ? "No entries yet. Click Add Post to create one."
+                : "No entries yet.";
+
+            listEl.appendChild(empty);
+            return;
+        }
+
+        // Newest post first
+        posts.slice().reverse().forEach(post => {
+
+            const card = document.createElement("div");
+            card.className = "obs-card";
+
+            // TITLE
+            const title = document.createElement("h3");
+            title.textContent = post.title || "Untitled";
+
+            // DATE
+            const meta = document.createElement("div");
+            meta.className = "obs-meta";
+
+            if (post.date) {
+                meta.textContent = new Date(post.date).toLocaleString();
+            }
+
+            // BODY
+            const body = document.createElement("div");
+            body.className = "project-body";
+
+            // HTML is allowed in the editor
+            body.innerHTML = post.body || "";
+
+            card.appendChild(title);
+            card.appendChild(meta);
+            card.appendChild(body);
+
+            // IMAGES
+            if (post.images && post.images.length > 0) {
+
+                const thumbs = document.createElement("div");
+                thumbs.className = "obs-thumbs";
+
+                post.images.forEach(src => {
+
+                    const img = document.createElement("img");
+
+                    img.src = src;
+                    img.alt = post.title || "Observation image";
+                    img.loading = "lazy";
+
+                    thumbs.appendChild(img);
+                });
+
+                card.appendChild(thumbs);
+            }
+
+            // ADMIN CONTROLS
+            if (isAdmin) {
+
+                const controls = document.createElement("div");
+                controls.style.marginTop = "10px";
+
+                // EDIT BUTTON
+                const editBtn = document.createElement("button");
+
+                editBtn.className = "small-btn";
+                editBtn.textContent = "Edit";
+
+                editBtn.addEventListener("click", () => {
+                    openModal("edit", post.id);
+                });
+
+                // DELETE BUTTON
+                const deleteBtn = document.createElement("button");
+
+                deleteBtn.className = "small-btn";
+                deleteBtn.textContent = "Delete";
+
+                deleteBtn.addEventListener("click", () => {
+
+                    const confirmed = confirm(
+                        "Are you sure you want to delete this post?"
+                    );
+
+                    if (!confirmed) return;
+
+                    posts = posts.filter(p => p.id !== post.id);
+
+                    savePosts();
+                    renderPosts();
+                });
+
+                controls.appendChild(editBtn);
+                controls.appendChild(deleteBtn);
+
+                card.appendChild(controls);
+            }
+
+            listEl.appendChild(card);
+        });
+    }
+
+    // --------------------------------------------------
+    // CREATE MODAL
+    // --------------------------------------------------
+
+    let modalEl = null;
+
+    function openModal(mode = "new", id = null) {
+
+        // Remove previous modal
+        if (modalEl) {
+            modalEl.remove();
+        }
+
+        modalEl = document.createElement("div");
+        modalEl.className = "modal";
+
+        const box = document.createElement("div");
+        box.className = "modal-box";
+
+        // TITLE INPUT
+        const titleInput = document.createElement("input");
+
+        titleInput.type = "text";
+        titleInput.placeholder = "Title";
+
+        // BODY INPUT
+        const bodyInput = document.createElement("textarea");
+
+        bodyInput.rows = 10;
+        bodyInput.placeholder = "Write content here. HTML is allowed.";
+
+        // FILE INPUT
+        const fileInput = document.createElement("input");
+
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.multiple = true;
+
+        // IMAGE PREVIEW
+        const preview = document.createElement("div");
+
+        preview.className = "image-preview";
+
+        let currentImages = [];
+
+        // --------------------------------------------------
+        // LOAD EXISTING POST WHEN EDITING
+        // --------------------------------------------------
+
+        if (mode === "edit" && id) {
+
+            const post = posts.find(p => p.id === id);
+
+            if (post) {
+
+                titleInput.value = post.title || "";
+                bodyInput.value = post.body || "";
+
+                currentImages = Array.isArray(post.images)
+                    ? post.images.slice()
+                    : [];
+
+                currentImages.forEach(src => {
+                    addPreviewImage(src);
+                });
+            }
+        }
+
+        // --------------------------------------------------
+        // IMAGE PREVIEW FUNCTION
+        // --------------------------------------------------
+
+        function addPreviewImage(src) {
+
+            const img = document.createElement("img");
+
+            img.src = src;
+            img.alt = "Preview";
+
+            img.style.maxWidth = "120px";
+            img.style.maxHeight = "90px";
+            img.style.margin = "5px";
+
+            preview.appendChild(img);
+        }
+
+        // --------------------------------------------------
+        // IMAGE UPLOAD
+        // --------------------------------------------------
+
+        fileInput.addEventListener("change", event => {
+
+            const files = Array.from(event.target.files || []);
+
+            files.forEach(file => {
+
+                if (!file.type.startsWith("image/")) {
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = () => {
+
+                    currentImages.push(reader.result);
+
+                    addPreviewImage(reader.result);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            // Allow selecting same file again later
+            fileInput.value = "";
+        });
+
+        // --------------------------------------------------
+        // ACTION BUTTONS
+        // --------------------------------------------------
+
+        const actions = document.createElement("div");
+        actions.className = "modal-actions";
+
+        // CANCEL
+        const cancelBtn = document.createElement("button");
+
+        cancelBtn.className = "secondary-button";
+        cancelBtn.textContent = "Cancel";
+
+        cancelBtn.addEventListener("click", () => {
+
+            if (modalEl) {
+                modalEl.remove();
+                modalEl = null;
+            }
+        });
+
+        // SAVE
+        const saveBtn = document.createElement("button");
+
+        saveBtn.className = "secondary-button";
+        saveBtn.textContent = "Save";
+
+        saveBtn.addEventListener("click", () => {
+
+            const title = titleInput.value.trim() || "Untitled";
+            const body = bodyInput.value.trim();
+
+            // EDIT EXISTING POST
+            if (mode === "edit" && id) {
+
+                posts = posts.map(post => {
+
+                    if (post.id === id) {
+
+                        return {
+                            ...post,
+                            title: title,
+                            body: body,
+                            images: currentImages
+                        };
+                    }
+
+                    return post;
+                });
+
+            }
+
+            // CREATE NEW POST
+            else {
+
+                const newPost = {
+
+                    id: Date.now().toString(),
+
+                    title: title,
+
+                    body: body,
+
+                    images: currentImages,
+
+                    date: new Date().toISOString()
+                };
+
+                posts.push(newPost);
+            }
+
+            savePosts();
+            renderPosts();
+
+            if (modalEl) {
+                modalEl.remove();
+                modalEl = null;
+            }
+        });
+
+        actions.appendChild(cancelBtn);
+        actions.appendChild(saveBtn);
+
+        // --------------------------------------------------
+        // BUILD MODAL
+        // --------------------------------------------------
+
+        box.appendChild(titleInput);
+        box.appendChild(bodyInput);
+        box.appendChild(fileInput);
+        box.appendChild(preview);
+        box.appendChild(actions);
+
+        modalEl.appendChild(box);
+
+        document.body.appendChild(modalEl);
+
+        titleInput.focus();
+    }
+
+    // --------------------------------------------------
+    // ADMIN LOGIN
+    // --------------------------------------------------
+
+    // Open a custom admin login modal to avoid browser-prompt blocking
+    function openAdminLoginModal() {
+        // If already admin, ask to sign out
+        if (isAdmin) {
+            const logout = confirm('You are currently signed in as admin.\n\nDo you want to sign out?');
+            if (logout) {
+                isAdmin = false;
+                sessionStorage.removeItem(ADMIN_SESSION_KEY);
+                ensureUI();
+                renderPosts();
+            }
+            return;
+        }
+
+        // Build modal
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        const box = document.createElement('div');
+        box.className = 'modal-box';
+
+        const label = document.createElement('div');
+        label.textContent = 'Enter admin password:';
+        label.style.marginBottom = '8px';
+
+        const input = document.createElement('input');
+        input.type = 'password';
+        input.placeholder = 'Password';
+        input.style.width = '100%';
+        input.style.padding = '8px';
+        input.style.marginBottom = '10px';
+
+        const actions = document.createElement('div');
+        actions.className = 'modal-actions';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'secondary-button';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.addEventListener('click', () => { modal.remove(); });
+
+        const submitBtn = document.createElement('button');
+        submitBtn.className = 'secondary-button';
+        submitBtn.textContent = 'Sign in';
+        submitBtn.addEventListener('click', () => {
+            const val = input.value || '';
+            if (val === 'kamleshk078') {
+                isAdmin = true;
+                sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+                ensureUI();
+                renderPosts();
+                alert('Admin login successful!');
+                modal.remove();
+            } else {
+                alert('Incorrect password.');
+            }
+        });
+
+        actions.appendChild(cancelBtn);
+        actions.appendChild(submitBtn);
+
+        box.appendChild(label);
+        box.appendChild(input);
+        box.appendChild(actions);
+        modal.appendChild(box);
+        document.body.appendChild(modal);
+
+        input.focus();
+    }
+
+    adminBtn.addEventListener('click', openAdminLoginModal);
+
+    // Delegated click fallback in case direct listener fails or button is covered
+    document.body.addEventListener('click', (ev) => {
+        try {
+            const target = ev.target.closest && ev.target.closest('#adminLoginBtn');
+            if (!target) return;
+
+            console.log('Admin button delegated click');
+
+            // reuse same logic
+            if (isAdmin) {
+                const logout = confirm('You are currently signed in as admin.\n\nDo you want to sign out?');
+                if (logout) {
+                    isAdmin = false;
+                    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+                    ensureUI();
+                    renderPosts();
+                }
+                return;
+            }
+
+            const attempt = prompt('Enter admin password:');
+            if (attempt === null) return;
+            if (attempt === 'kamleshk078') {
+                isAdmin = true;
+                sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+                ensureUI();
+                renderPosts();
+                alert('Admin login successful!');
+            } else {
+                alert('Incorrect password.');
+            }
+        } catch (e) {
+            console.error('Delegated admin click handler error:', e);
+        }
+    });
+
+    // --------------------------------------------------
+    // ADD POST BUTTON
+    // --------------------------------------------------
+
+    addBtn.addEventListener("click", () => {
+
+        if (!isAdmin) {
+
+            alert("Please login as admin first.");
+            return;
+        }
+
+        openModal("new");
+    });
+
+    // --------------------------------------------------
+    // EXPOSE MODAL FUNCTION
+    // --------------------------------------------------
+
+    window.openObservationModal = openModal;
+
+    // --------------------------------------------------
+    // INITIALIZE
+    // --------------------------------------------------
+
+    loadPosts();
+    ensureUI();
+    renderPosts();
+
+    } catch (initErr) {
+        console.error('Observations init error:', initErr);
+    }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initObservations);
+    } else {
+        initObservations();
+    }
 </script>
 </body>
 </html>
