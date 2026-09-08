@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project and Observation</title>
+<meta name="description" content="Project and Observation article">
+<meta property="og:title" content="Project and Observation">
+<meta property="og:description" content="Project and Observation article">
+<meta property="og:image" content="">
+<meta property="og:url" content="">
+<meta name="twitter:card" content="summary_large_image">
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+<style>
+:root {
+    --bg: #f7f9fc;
+    --text: #20242c;
+    --text-soft: #52606d;
+    --text-muted: #69778a;
+    --border: #dce4ea;
+    --card-bg: #ffffff;
+    --accent: #ff402a;
+    --accent-2: #102a43;
+    --light-bg: #eef6ff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 30px 20px;
+    background: linear-gradient(rgba(244, 246, 248, 0.88), rgba(244, 247, 248, 0.25)), url('background.jpg') center / cover fixed;
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+.article-page-shell {
+    width: min(100%, 1080px);
+    margin: 0 auto;
+    padding: 26px;
+    background: rgba(254, 255, 241, 0.9);
+    border: 1px solid #cfd7dd;
+}
+
+.article-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.article-site-title {
+    margin: 0;
+    color: var(--accent-2);
+    font-size: clamp(24px, 4vw, 38px);
+    line-height: 1.1;
+}
+
+.article-back-link,
+.article-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--accent-2);
+    padding: 10px 14px;
+    background: var(--accent-2);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.article-back-link:hover,
+.article-action:hover { background: var(--accent); border-color: var(--accent); }
+
+.article-status {
+    max-width: 760px;
+    margin: 50px auto;
+    padding: 28px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+}
+
+.article-status h1 {
+    margin: 0 0 10px;
+    color: var(--accent-2);
+}
+
+.article-status p { color: var(--text-soft); line-height: 1.6; }
+
+.article-detail {
+    max-width: 900px;
+    margin: 28px auto 0;
+    background: var(--card-bg);
+}
+
+.article-detail-image {
+    display: block;
+    width: 100%;
+    max-height: 600px;
+    object-fit: cover;
+    background: #e8eef2;
+}
+
+.article-detail-content { padding: 28px 32px 36px; }
+.article-category {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.article-detail h1 {
+    margin: 8px 0 10px;
+    color: var(--accent-2);
+    font-size: clamp(32px, 5vw, 54px);
+    line-height: 1.08;
+}
+
+.article-published { margin: 0 0 18px; color: var(--text-muted); font-size: 13px; }
+.article-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.article-share-status { min-height: 18px; margin: 0 0 14px; color: var(--text-soft); font-size: 12px; }
+
+.article-body {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.article-body h1, .article-body h2, .article-body h3 {
+    margin: 26px 0 10px;
+    color: var(--accent-2);
+    line-height: 1.25;
+}
+.article-body h1 { font-size: 32px; }
+.article-body h2 { font-size: 25px; }
+.article-body h3 { font-size: 21px; }
+.article-body p { margin: 0 0 16px; }
+.article-body ul, .article-body ol { padding-left: 24px; }
+.article-body blockquote { margin: 18px 0; padding: 10px 18px; border-left: 4px solid var(--accent); background: var(--light-bg); color: var(--text-soft); }
+.article-body pre { overflow-x: auto; padding: 14px; background: var(--accent-2); color: white; }
+.article-body code { padding: 2px 4px; background: #eef2f5; }
+.article-body pre code { padding: 0; background: transparent; }
+
+@media (max-width: 620px) {
+    body { padding: 16px 10px; }
+    .article-page-shell { padding: 18px 14px; }
+    .article-page-header { align-items: flex-start; flex-direction: column; }
+    .article-detail-content { padding: 22px 18px 28px; }
+    .article-body { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+<main class="article-page-shell">
+    <header class="article-page-header">
+        <h1 class="article-site-title">Project and Observation</h1>
+        <a class="article-back-link" href="index.html#observations">&larr; Back to Project and Observation</a>
+    </header>
+    <div id="articleRoot" aria-live="polite"></div>
+</main>
+
+<script>
+const articleRoot = document.getElementById('articleRoot');
+const articleId = new URLSearchParams(window.location.search).get('id');
+
+function parseFrontMatter(source) {
+    const match = source.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+    const metadata = {};
+
+    if (!match) return { metadata, content: source };
+
+    match[1].split('\n').forEach(line => {
+        const separator = line.indexOf(':');
+        if (separator === -1) return;
+
+        const key = line.slice(0, separator).trim();
+        const value = line.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
+        metadata[key] = value;
+    });
+
+    return { metadata, content: match[2] };
+}
+
+function formatDateTime(article) {
+    const date = new Date(`${article.date}T${article.time || '00:00'}`);
+    if (Number.isNaN(date.getTime())) return `${article.date || ''} ${article.time || ''}`.trim();
+
+    const dateText = new Intl.DateTimeFormat('en-IN', { dateStyle: 'long' }).format(date);
+    const timeText = new Intl.DateTimeFormat('en-IN', { timeStyle: 'short' }).format(date);
+    return `${dateText} • ${timeText}`;
+}
+
+function setMeta(name, content, property = false) {
+    const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+    let meta = document.head.querySelector(selector);
+    if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(property ? 'property' : 'name', name);
+        document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', content);
+}
+
+function showMessage(title, message) {
+    articleRoot.innerHTML = `
+        <section class="article-status">
+            <h1>${title}</h1>
+            <p>${message}</p>
+            <a class="article-back-link" href="index.html#observations">&larr; Back to Project and Observation</a>
+        </section>
+    `;
+    document.title = `${title} | Project and Observation`;
+}
+
+async function copyCurrentUrl() {
+    const url = window.location.href;
+    try {
+        await navigator.clipboard.writeText(url);
+    } catch (error) {
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        textArea.setAttribute('readonly', '');
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        textArea.remove();
+    }
+    document.getElementById('articleShareStatus').textContent = 'Link copied!';
+}
+
+async function shareArticle(article) {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: article.title,
+                text: article.excerpt,
+                url: window.location.href
+            });
+            document.getElementById('articleShareStatus').textContent = 'Article shared.';
+            return;
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+        }
+    }
+    await copyCurrentUrl();
+}
+
+function renderArticle(article) {
+    const imageUrl = article.image ? new URL(article.image, new URL(article.articleUrl, document.baseURI)).href : '';
+    const excerptElement = document.createElement('div');
+    excerptElement.innerHTML = marked.parse(article.content);
+    const excerpt = excerptElement.textContent.replace(/\s+/g, ' ').trim().slice(0, 200);
+
+    document.title = `${article.title || 'Untitled article'} | Project and Observation`;
+    setMeta('description', excerpt || 'Project and Observation article');
+    setMeta('og:title', article.title || 'Project and Observation', true);
+    setMeta('og:description', excerpt || 'Project and Observation article', true);
+    setMeta('og:image', imageUrl, true);
+    setMeta('og:url', window.location.href, true);
+
+    articleRoot.innerHTML = '';
+    const articleElement = document.createElement('article');
+    articleElement.className = 'article-detail';
+    articleElement.innerHTML = `
+        ${imageUrl ? `<img class="article-detail-image" src="${imageUrl}" alt="">` : ''}
+        <div class="article-detail-content">
+            <div class="article-category"></div>
+            <h1></h1>
+            <p class="article-published"></p>
+            <div class="article-actions">
+                <button class="article-action" id="shareArticle" type="button">Share Article</button>
+                <button class="article-action" id="copyArticleLink" type="button">Copy Link</button>
+            </div>
+            <p class="article-share-status" id="articleShareStatus" aria-live="polite"></p>
+            <div class="article-body"></div>
+            <a class="article-back-link" href="index.html#observations">&larr; Back to Project and Observation</a>
+        </div>
+    `;
+    articleElement.querySelector('.article-category').textContent = article.category || 'Project';
+    articleElement.querySelector('h1').textContent = article.title || 'Untitled article';
+    articleElement.querySelector('.article-published').textContent = `Published: ${formatDateTime(article)}`;
+    articleElement.querySelector('.article-body').innerHTML = marked.parse(article.content);
+    articleElement.querySelector('#shareArticle').addEventListener('click', () => shareArticle({ ...article, excerpt }));
+    articleElement.querySelector('#copyArticleLink').addEventListener('click', copyCurrentUrl);
+    articleRoot.appendChild(articleElement);
+}
+
+async function loadArticle() {
+    if (!articleId) {
+        showMessage('No Article Selected', 'Open an article from the Project and Observation listing.');
+        return;
+    }
+
+    try {
+        const manifestResponse = await fetch('articles/index.json', { cache: 'no-store' });
+        if (!manifestResponse.ok) throw new Error('Manifest unavailable');
+        const filenames = await manifestResponse.json();
+        const filename = filenames.find(item => item.replace(/\.md$/i, '') === articleId);
+
+        if (!filename) {
+            showMessage('Article Not Found', 'The requested article does not exist in articles/index.json.');
+            return;
+        }
+
+        const articleResponse = await fetch(`articles/${filename}`, { cache: 'no-store' });
+        if (!articleResponse.ok) throw new Error('Article unavailable');
+        const parsed = parseFrontMatter(await articleResponse.text());
+        renderArticle({ ...parsed.metadata, content: parsed.content, filename, articleUrl: `articles/${filename}` });
+    } catch (error) {
+        console.error('Article loading failed:', error);
+        showMessage('Article Not Found', 'This article could not be loaded. Please check the article filename and manifest.');
+    }
+}
+
+loadArticle();
+</script>
+</body>
+</html>
