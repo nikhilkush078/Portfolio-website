@@ -865,6 +865,8 @@ h1 {
 .obs-card { border:1px solid var(--border); background:white; padding:14px }
 .obs-card h3 { margin:0 0 8px; color:var(--accent-2) }
 .obs-card .obs-meta { font-size:12px; color:var(--text-muted); margin-bottom:10px }
+.obs-file-text { white-space:pre-wrap; color:var(--text-soft); line-height:1.7; margin-bottom:14px }
+.obs-card > img { display:block; width:100%; max-width:900px; max-height:700px; object-fit:contain; border:1px solid var(--border) }
 .obs-thumbs { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
 .obs-thumbs img { max-width:900px; max-height:700px; object-fit:cover; border:1px solid var(--border) }
 .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(16,42,67,0.45); z-index:9999 }
@@ -965,17 +967,11 @@ h1 {
     <section id="observations" class="page-section">
         <div class="section-head">
             <h2>Projects & Observations</h2>
-            <p>Daily research articles, images, and notes — addable via the admin UI.</p>
+            <p>Daily research articles, images, and notes loaded from numbered TXT and PNG files.</p>
         </div>
 
         <div class="project-panel">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-                <div class="panel-title">Projects & Observations</div>
-                <div class="admin-controls">
-                    <button id="adminLoginBtn" class="secondary-button">Admin Login</button>
-                    <button id="addPostBtn" class="secondary-button" style="display:none">Add</button>
-                </div>
-            </div>
+            <div class="panel-title">Projects & Observations</div>
 
             <div id="observationsList" class="observations-list"></div>
         </div>
@@ -1320,8 +1316,8 @@ navLinks.forEach(link => {
         });
     });
 
-            // Projects & Observations — Client-side editor using localStorage
-    function initObservations() {
+                /* Legacy local editor retained below only as archived code; static files are initialized at the end.
+                function initLegacyObservations() {
     console.log('Observations: initObservations running');
     try {
 
@@ -1878,6 +1874,83 @@ navLinks.forEach(link => {
     } catch (initErr) {
         console.error('Observations init error:', initErr);
     }
+    }
+
+    */
+
+    async function initObservations() {
+        const listEl = document.getElementById('observationsList');
+
+        if (!listEl) {
+            return;
+        }
+
+        const posts = [];
+        const maxEntries = 100;
+
+        for (let index = 1; index <= maxEntries; index += 1) {
+            const textUrl = `TXT${index}.txt`;
+            const imageUrl = `IMG${index}.png`;
+            const textResponse = await fetch(textUrl, { cache: 'no-store' });
+
+            if (!textResponse.ok) {
+                if (textResponse.status === 404) {
+                    break;
+                }
+
+                console.error(`Could not load ${textUrl}: ${textResponse.status}`);
+                continue;
+            }
+
+            const text = await textResponse.text();
+            let imageExists = false;
+
+            try {
+                const imageResponse = await fetch(imageUrl, {
+                    method: 'HEAD',
+                    cache: 'no-store'
+                });
+                imageExists = imageResponse.ok;
+            } catch (error) {
+                console.warn(`Could not check ${imageUrl}:`, error);
+            }
+
+            posts.push({ index, text, imageUrl: imageExists ? imageUrl : null });
+        }
+
+        listEl.innerHTML = '';
+
+        if (posts.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'obs-card';
+            empty.textContent = 'No observation files found. Add TXT1.txt and IMG1.png to this folder.';
+            listEl.appendChild(empty);
+            return;
+        }
+
+        posts.reverse().forEach(post => {
+            const card = document.createElement('article');
+            card.className = 'obs-card';
+
+            const title = document.createElement('h3');
+            title.textContent = `Observation ${post.index}`;
+            card.appendChild(title);
+
+            const body = document.createElement('div');
+            body.className = 'obs-file-text';
+            body.textContent = post.text;
+            card.appendChild(body);
+
+            if (post.imageUrl) {
+                const image = document.createElement('img');
+                image.src = post.imageUrl;
+                image.alt = `Observation ${post.index}`;
+                image.loading = 'lazy';
+                card.appendChild(image);
+            }
+
+            listEl.appendChild(card);
+        });
     }
 
     if (document.readyState === 'loading') {
