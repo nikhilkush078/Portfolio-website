@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Article Admin | Nikhil Kushwah</title>
+<style>
+:root { --ink:#102a43; --muted:#52606d; --line:#dce4ea; --paper:#fffef7; --accent:#ff402a; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; padding:32px 18px; color:var(--ink); font-family:Georgia, 'Times New Roman', serif; background:linear-gradient(rgba(244,246,248,.88),rgba(244,247,248,.35)), url('background.jpg') center/cover fixed; }
+.admin-shell { width:min(100%,760px); margin:auto; padding:clamp(22px,5vw,48px); background:var(--paper); border:1px solid #cfd7dd; box-shadow:0 18px 45px rgba(16,42,67,.12); }
+.admin-header { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; padding-bottom:22px; border-bottom:1px solid var(--line); }
+h1 { margin:0 0 8px; font-size:clamp(30px,6vw,48px); line-height:1; }
+.lede { margin:0; color:var(--muted); line-height:1.6; }
+.back-link { color:var(--ink); font-size:13px; font-weight:700; }
+form { display:grid; gap:16px; margin-top:28px; }
+.field-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+label { display:grid; gap:7px; color:var(--muted); font:700 12px/1.2 Arial,sans-serif; letter-spacing:.05em; text-transform:uppercase; }
+input, textarea, select { width:100%; padding:12px 13px; border:1px solid #aebfc9; border-radius:0; color:var(--ink); background:#fff; font:16px/1.4 Georgia,'Times New Roman',serif; }
+textarea { min-height:190px; resize:vertical; }
+input:focus, textarea:focus, select:focus { outline:2px solid #9bd4dc; outline-offset:1px; }
+button { width:max-content; padding:13px 18px; border:1px solid var(--ink); border-radius:0; color:#fff; background:var(--ink); font:700 13px Arial,sans-serif; cursor:pointer; }
+button:hover { background:var(--accent); border-color:var(--accent); }
+button:disabled { cursor:wait; opacity:.65; }
+.status { min-height:22px; margin:0; color:var(--muted); font:14px/1.5 Arial,sans-serif; }
+.status.error { color:#b42318; }
+.status.success { color:#16704a; }
+.note { margin-top:24px; color:var(--muted); font:12px/1.5 Arial,sans-serif; }
+@media (max-width:600px) { .admin-header, .field-grid { display:block; } .back-link { display:inline-block; margin-top:16px; } .field-grid label + label { margin-top:16px; } }
+</style>
+</head>
+<body>
+<main class="admin-shell">
+    <header class="admin-header">
+        <div>
+            <h1>Publish an observation</h1>
+            <p class="lede">Add a dated project note to the public Project and Observation tab.</p>
+        </div>
+        <a class="back-link" href="index.html#observations">View site</a>
+    </header>
+
+    <form id="articleForm">
+        <label>Admin password
+            <input id="password" type="password" autocomplete="current-password" required>
+        </label>
+        <label>Title
+            <input id="title" type="text" maxlength="120" required>
+        </label>
+        <div class="field-grid">
+            <label>Category
+                <select id="category">
+                    <option>Observation</option>
+                    <option>Project</option>
+                    <option>Lab Notes</option>
+                </select>
+            </label>
+            <label>Image
+                <input id="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+            </label>
+        </div>
+        <div class="field-grid">
+            <label>Date
+                <input id="date" type="date" required>
+            </label>
+            <label>Time
+                <input id="time" type="time" required>
+            </label>
+        </div>
+        <label>Description
+            <textarea id="description" maxlength="12000" placeholder="Describe the project, experiment, result, or observation..." required></textarea>
+        </label>
+        <button id="publishButton" type="submit">Publish article</button>
+        <p id="status" class="status" aria-live="polite"></p>
+    </form>
+    <p class="note">Images are committed to the connected GitHub repository. Keep them under 3 MB for reliable Vercel deployments.</p>
+</main>
+<script>
+const form = document.getElementById('articleForm');
+const status = document.getElementById('status');
+const publishButton = document.getElementById('publishButton');
+const now = new Date();
+document.getElementById('date').value = now.toISOString().slice(0, 10);
+document.getElementById('time').value = now.toTimeString().slice(0, 5);
+
+function readImage(file) {
+    if (!file) return Promise.resolve(null);
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({
+            name: file.name,
+            type: file.type,
+            base64: String(reader.result).split(',')[1]
+        });
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+form.addEventListener('submit', async event => {
+    event.preventDefault();
+    publishButton.disabled = true;
+    status.className = 'status';
+    status.textContent = 'Publishing to GitHub...';
+
+    try {
+        const image = await readImage(document.getElementById('image').files[0]);
+        const response = await fetch('/api/articles', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-Password': document.getElementById('password').value
+            },
+            body: JSON.stringify({
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                description: document.getElementById('description').value,
+                image
+            })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Publishing failed.');
+        status.className = 'status success';
+        status.textContent = 'Published. The new article is now in the GitHub content store.';
+        form.reset();
+    } catch (error) {
+        status.className = 'status error';
+        status.textContent = error.message;
+    } finally {
+        publishButton.disabled = false;
+    }
+});
+</script>
+</body>
+</html>
