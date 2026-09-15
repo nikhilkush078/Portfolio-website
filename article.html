@@ -302,6 +302,22 @@ async function loadArticle() {
     }
 
     try {
+        const apiResponse = await fetch('/api/articles', { cache: 'no-store' });
+        if (apiResponse.ok) {
+            const articles = await apiResponse.json();
+            const article = articles.find(item => item.id === articleId);
+            if (!article) {
+                showMessage('Article Not Found', 'The requested article does not exist.');
+                return;
+            }
+            renderArticle({
+                ...article,
+                content: article.description,
+                articleUrl: `article.html?id=${encodeURIComponent(article.id)}`
+            });
+            return;
+        }
+
         const manifestResponse = await fetch('articles/index.json', { cache: 'no-store' });
         if (!manifestResponse.ok) throw new Error('Manifest unavailable');
         const filenames = await manifestResponse.json();

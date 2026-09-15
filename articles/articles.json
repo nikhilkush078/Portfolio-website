@@ -1,0 +1,32 @@
+[
+  {
+    "id": "article1",
+    "title": "Induced Current During Magnet Motion",
+    "description": "A permanent magnet approaching a conducting coil changes the magnetic flux through the coil, producing an induced EMF and current. If the magnet stops briefly, the induced EMF falls to zero because the flux is no longer changing. When the magnet reverses direction, the current reverses as well according to Faraday's law and Lenz's law.",
+    "category": "Observation",
+    "date": "2026-09-08",
+    "time": "10:30",
+    "day": "Tuesday",
+    "image": "images/article1.png"
+  },
+  {
+    "id": "article2",
+    "title": "Diode Rectification in a Solenoid Experiment",
+    "description": "Two magnets move toward a solenoid from opposite ends while the terminals form a loop containing an ideal diode. The diode changes this behavior by allowing current during only one polarity of the induced voltage, making the mechanical response asymmetric.",
+    "category": "Project",
+    "date": "2026-09-07",
+    "time": "18:20",
+    "day": "Monday",
+    "image": "images/article2.png"
+  },
+  {
+    "id": "article3",
+    "title": "Practical Electronics Bench Notes",
+    "description": "Reliable hardware begins with careful observation. Measurements, wiring checks, and repeatable tests help connect circuit theory with real behavior. Documenting each experiment as a small, dated article makes it easier to compare results and improve the next prototype.",
+    "category": "Lab Notes",
+    "date": "2026-09-06",
+    "time": "14:00",
+    "day": "Sunday",
+    "image": "images/article3.png"
+  }
+]

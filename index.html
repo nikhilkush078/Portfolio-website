@@ -953,6 +953,7 @@ h1 {
         <a href="#observations">Project and Observation</a>
         <a href="#tools">Custom Tools</a>
         <a href="#contact">Contact</a>
+        <a href="admin.html">Admin</a>
     </nav>
 
     <section id="home" class="page-section active-section">
@@ -1343,7 +1344,6 @@ navLinks.forEach(link => {
                 
 
     const articleList = document.getElementById('articleList');
-    const articleIndexUrl = 'articles/index.json';
     let articles = [];
 
     function parseFrontMatter(source) {
@@ -1398,6 +1398,15 @@ navLinks.forEach(link => {
         };
     }
 
+    function createPublishedArticle(article) {
+        return {
+            ...article,
+            filename: article.id,
+            articleUrl: `article.html?id=${encodeURIComponent(article.id)}`,
+            excerpt: article.description || ''
+        };
+    }
+
     function setObservationSectionActive() {
         document.querySelectorAll('.page-section').forEach(section => {
             section.classList.toggle('active-section', section.id === 'observations');
@@ -1411,7 +1420,7 @@ navLinks.forEach(link => {
         articleList.innerHTML = '';
 
         if (!articles.length) {
-            articleList.innerHTML = '<div class="article-status">No articles found. Add Markdown files to the articles folder and list them in articles/index.json.</div>';
+            articleList.innerHTML = '<div class="article-status">No articles found. Publish the first observation from the admin page.</div>';
             return;
         }
 
@@ -1430,7 +1439,7 @@ navLinks.forEach(link => {
 
             const content = document.createElement('div');
             content.className = 'article-card-content';
-            const articleId = encodeURIComponent(article.filename.replace(/\.md$/i, ''));
+            const articleId = encodeURIComponent(article.id || article.filename.replace(/\.md$/i, ''));
             content.innerHTML = `
                 <div class="article-category"></div>
                 <h3></h3>
@@ -1449,25 +1458,20 @@ navLinks.forEach(link => {
 
     async function loadArticles() {
         try {
-            const manifestResponse = await fetch(articleIndexUrl, { cache: 'no-store' });
-            if (!manifestResponse.ok) throw new Error(`Could not load ${articleIndexUrl}`);
-
-            const filenames = await manifestResponse.json();
-            const sources = await Promise.all(filenames.map(async filename => {
-                const response = await fetch(`articles/${filename}`, { cache: 'no-store' });
-                if (!response.ok) throw new Error(`Could not load articles/${filename}`);
-                return createArticleData(filename, await response.text());
-            }));
-
-            articles = sources.sort((first, second) => {
-                const firstDate = new Date(`${first.date}T${first.time || '00:00'}`);
-                const secondDate = new Date(`${second.date}T${second.time || '00:00'}`);
-                return secondDate - firstDate;
-            });
+            const response = await fetch('/api/articles', { cache: 'no-store' });
+            if (!response.ok) throw new Error('Published articles unavailable');
+            articles = (await response.json()).map(createPublishedArticle);
             renderArticleList();
         } catch (error) {
             console.error('Article loading failed:', error);
-            articleList.innerHTML = '<div class="article-status">Articles could not be loaded. Check articles/index.json and the Markdown filenames.</div>';
+            try {
+                const response = await fetch('articles/articles.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error('Static article catalog unavailable');
+                articles = (await response.json()).map(createPublishedArticle);
+                renderArticleList();
+            } catch (fallbackError) {
+                articleList.innerHTML = '<div class="article-status">Articles could not be loaded. Check the Vercel API configuration.</div>';
+            }
         }
     }
 
