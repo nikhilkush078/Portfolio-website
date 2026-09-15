@@ -532,36 +532,38 @@ h1 {
 }
 
 .drive-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.drive-photo-card {
-    width: 110px;
-    height: 110px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     background: #eaf1f4;
     border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    text-decoration: none;
-    color: var(--accent-2);
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1px;
 }
 
-.drive-photo-card span {
+.drive-slideshow-link {
     display: block;
-    margin-top: 8px;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
 }
 
-.drive-photo-card:hover {
-    background: #dcecf1;
-    border-color: var(--accent-2);
+.drive-slideshow-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity .35s ease;
+}
+
+.drive-slideshow-status {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 10px 12px;
+    color: white;
+    background: rgba(16, 42, 67, .82);
+    font-size: 12px;
+    text-align: center;
 }
 
 .drive-link-row {
@@ -611,6 +613,59 @@ h1 {
 
 .info-card ul {
     padding-left: 18px;
+}
+
+.achievement-window {
+    position: relative;
+    max-height: 236px;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.achievement-window::before,
+.achievement-window::after {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    left: 0;
+    height: 24px;
+    content: "";
+    pointer-events: none;
+}
+
+.achievement-window::before {
+    top: 0;
+    background: linear-gradient(var(--card-bg), transparent);
+}
+
+.achievement-window::after {
+    bottom: 0;
+    background: linear-gradient(transparent, var(--card-bg));
+}
+
+.achievement-list {
+    margin: 0;
+    padding: 24px 0;
+    list-style: none;
+    animation: achievement-scroll 22s ease-in-out infinite;
+}
+
+.achievement-list:hover {
+    animation-play-state: paused;
+}
+
+.achievement-list li {
+    padding: 11px 0;
+    color: var(--text-soft);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@keyframes achievement-scroll {
+    0%, 12% { transform: translateY(0); }
+    48%, 62% { transform: translateY(-190px); }
+    88%, 100% { transform: translateY(0); }
 }
 
 .image-panel {
@@ -1038,29 +1093,27 @@ h1 {
             </article>
 
             <article class="info-panel">
-                <div class="panel-title">Photos</div>
-                <div class="drive-gallery">
-                    <a class="drive-photo-card" href="https://drive.google.com/drive/folders/PHOTO_FOLDER_ID" target="_blank">
-                        <span>Photo Gallery</span>
-                    </a>
-                    <a class="drive-photo-card" href="https://drive.google.com/drive/folders/PHOTO_FOLDER_ID" target="_blank">
-                        <span>Lab Photos</span>
-                    </a>
-                    <a class="drive-photo-card" href="https://drive.google.com/drive/folders/PHOTO_FOLDER_ID" target="_blank">
-                        <span>Project Photos</span>
+                <div class="panel-title">Photo Gallery</div>
+                <div class="drive-gallery" id="driveGallery" aria-live="polite">
+                    <a class="drive-slideshow-link" href="https://drive.google.com/drive/folders/19yqlmFNMhGop60D4MnLt43Idjj3aCkl-?usp=sharing" target="_blank" rel="noopener noreferrer">
+                        <div class="drive-slideshow-status">Open photo gallery in Google Drive</div>
                     </a>
                 </div>
             </article>
 
             <article class="info-panel">
                 <div class="panel-title">Achievements</div>
-                <ul>
-                    <li>Engineering project work and GitHub portfolio</li>
-                    <li>Practical electronics and smart systems learning</li>
-                    <li>Electrical engineering developments and study work</li>
-                </ul>
-                <div class="drive-link-row">
-                    <a href="https://drive.google.com/drive/folders/ACHIEVEMENTS_FOLDER_ID" target="_blank">Achievement Photos</a>
+                <div class="achievement-window">
+                    <ul class="achievement-list">
+                        <li>Co-convener of the Flux Club</li>
+                        <li>President of the Startup Cell ACTI</li>
+                        <li>Organizer of the Smart India Hackathon 2026</li>
+                        <li>Finalist of the Smart India Hackathon 2024</li>
+                        <li>Built practical embedded systems and electrical safety prototypes</li>
+                        <li>Developed custom tools for transformer and thyristor analysis</li>
+                        <li>Published technical observations and laboratory notes</li>
+                        <li>Maintained an active GitHub portfolio of engineering projects</li>
+                    </ul>
                 </div>
             </article>
         </div>
@@ -1341,7 +1394,73 @@ navLinks.forEach(link => {
         });
     });
 
-                
+    const photoGalleryConfig = {
+        folderId: 'PHOTO_FOLDER_ID',
+        folderUrl: 'https://drive.google.com/drive/folders/PHOTO_FOLDER_ID',
+        apiKey: 'YOUR_GOOGLE_DRIVE_API_KEY'
+    };
+
+    const driveGallery = document.getElementById('driveGallery');
+
+    function showGalleryStatus(message) {
+        driveGallery.innerHTML = `
+            <a class="drive-slideshow-link" href="${photoGalleryConfig.folderUrl}" target="_blank" rel="noopener noreferrer">
+                <div class="drive-slideshow-status">${message}</div>
+            </a>
+        `;
+    }
+
+    async function loadDriveGallery() {
+        if (!driveGallery || photoGalleryConfig.folderId === 'PHOTO_FOLDER_ID' || photoGalleryConfig.apiKey === 'YOUR_GOOGLE_DRIVE_API_KEY') {
+            showGalleryStatus('Open photo gallery in Google Drive');
+            return;
+        }
+
+        showGalleryStatus('Loading photo gallery...');
+
+        try {
+            const query = encodeURIComponent(`'${photoGalleryConfig.folderId}' in parents and trashed = false`);
+            const fields = encodeURIComponent('files(id,name,mimeType)');
+            const endpoint = `https://www.googleapis.com/drive/v3/files?q=${query}&orderBy=name&pageSize=100&fields=${fields}&key=${photoGalleryConfig.apiKey}`;
+            const response = await fetch(endpoint);
+            if (!response.ok) throw new Error('Google Drive request failed');
+
+            const result = await response.json();
+            const photos = (result.files || []).filter(file => file.mimeType.startsWith('image/'));
+            if (!photos.length) {
+                showGalleryStatus('No photos found. Open the Google Drive folder');
+                return;
+            }
+
+            driveGallery.innerHTML = `
+                <a class="drive-slideshow-link" href="${photoGalleryConfig.folderUrl}" target="_blank" rel="noopener noreferrer">
+                    <img class="drive-slideshow-image" alt="Photo gallery image">
+                    <div class="drive-slideshow-status">Open photo gallery in Google Drive</div>
+                </a>
+            `;
+
+            const image = driveGallery.querySelector('.drive-slideshow-image');
+            let currentPhoto = 0;
+            const showPhoto = () => {
+                const photo = photos[currentPhoto];
+                image.style.opacity = '0';
+                window.setTimeout(() => {
+                    image.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(photo.id)}&sz=w1200`;
+                    image.alt = photo.name || 'Photo gallery image';
+                    image.style.opacity = '1';
+                }, 180);
+                currentPhoto = (currentPhoto + 1) % photos.length;
+            };
+
+            showPhoto();
+            if (photos.length > 1) window.setInterval(showPhoto, 4500);
+        } catch (error) {
+            console.error('Google Drive gallery failed:', error);
+            showGalleryStatus('Gallery unavailable. Open the Google Drive folder');
+        }
+    }
+
+    loadDriveGallery();
 
     const articleList = document.getElementById('articleList');
     let articles = [];
