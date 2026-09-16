@@ -1,5 +1,15 @@
 [
   {
+    "id": "test-1789562696900",
+    "title": "test",
+    "description": "test",
+    "category": "Observation",
+    "date": "2026-09-16",
+    "time": "18:14",
+    "day": "Wednesday",
+    "image": ""
+  },
+  {
     "id": "article1",
     "title": "Induced Current During Magnet Motion",
     "description": "A permanent magnet approaching a conducting coil changes the magnetic flux through the coil, producing an induced EMF and current. If the magnet stops briefly, the induced EMF falls to zero because the flux is no longer changing. When the magnet reverses direction, the current reverses as well according to Faraday's law and Lenz's law.",
