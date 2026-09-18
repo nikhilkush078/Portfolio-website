@@ -544,16 +544,19 @@ h1 {
     overflow: hidden;
     width: 100%;
     aspect-ratio: 16 / 9;
-    background: #eaf1f4;
+    background: #0f1f2d;
     border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .drive-slideshow-link {
+    position: relative;
     display: block;
     width: 100%;
     height: 100%;
     color: inherit;
     text-decoration: none;
+    background: #0f1f2d;
 }
 
 .drive-slideshow-image {
@@ -561,7 +564,13 @@ h1 {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity .35s ease;
+    object-position: center;
+    background: #0f1f2d;
+    transition: opacity .35s ease, transform .35s ease;
+}
+
+.drive-slideshow-link:hover .drive-slideshow-image {
+    transform: scale(1.02);
 }
 
 .drive-slideshow-status {
@@ -569,9 +578,10 @@ h1 {
     inset: auto 0 0;
     padding: 10px 12px;
     color: white;
-    background: rgba(16, 42, 67, .82);
+    background: linear-gradient(to top, rgba(16, 42, 67, 0.9), rgba(16, 42, 67, 0.2));
     font-size: 12px;
     text-align: center;
+    z-index: 2;
 }
 
 .drive-link-row {
@@ -1103,7 +1113,7 @@ h1 {
             <article class="info-panel">
                 <div class="panel-title">Photo Gallery</div>
                 <div class="drive-gallery" id="driveGallery" aria-live="polite">
-                    <a class="drive-slideshow-link" href="https://drive.google.com/drive/folders/19yqlmFNMhGop60D4MnLt43Idjj3aCkl-?usp=sharing" target="_blank" rel="noopener noreferrer">
+                    <a class="drive-slideshow-link" href="https://drive.google.com/drive/folders/19yqlmFNMhGop60D4MnLt43Idjj3aCkl-" target="_blank" rel="noopener noreferrer">
                         <div class="drive-slideshow-status">Open photo gallery in Google Drive</div>
                     </a>
                 </div>
@@ -1403,14 +1413,23 @@ navLinks.forEach(link => {
     });
 
     const photoGalleryConfig = {
-        folderId: 'PHOTO_FOLDER_ID',
-        folderUrl: 'https://drive.google.com/drive/folders/PHOTO_FOLDER_ID',
-        apiKey: 'YOUR_GOOGLE_DRIVE_API_KEY'
+        folderUrl: 'https://drive.google.com/drive/folders/19yqlmFNMhGop60D4MnLt43Idjj3aCkl-',
+        galleryIndexUrl: 'gallery/index.json'
     };
 
     const driveGallery = document.getElementById('driveGallery');
 
+    function buildGalleryMarkup() {
+        return `
+            <a class="drive-slideshow-link" href="${photoGalleryConfig.folderUrl}" target="_blank" rel="noopener noreferrer">
+                <img class="drive-slideshow-image" alt="Photo gallery image">
+                <div class="drive-slideshow-status">Open photo gallery in Google Drive</div>
+            </a>
+        `;
+    }
+
     function showGalleryStatus(message) {
+        if (!driveGallery) return;
         driveGallery.innerHTML = `
             <a class="drive-slideshow-link" href="${photoGalleryConfig.folderUrl}" target="_blank" rel="noopener noreferrer">
                 <div class="drive-slideshow-status">${message}</div>
@@ -1418,54 +1437,51 @@ navLinks.forEach(link => {
         `;
     }
 
-    async function loadDriveGallery() {
-        if (!driveGallery || photoGalleryConfig.folderId === 'PHOTO_FOLDER_ID' || photoGalleryConfig.apiKey === 'YOUR_GOOGLE_DRIVE_API_KEY') {
-            showGalleryStatus('Open photo gallery in Google Drive');
-            return;
-        }
-
-        showGalleryStatus('Loading photo gallery...');
+    async function loadLocalGallery() {
+        if (!driveGallery) return;
 
         try {
-            const query = encodeURIComponent(`'${photoGalleryConfig.folderId}' in parents and trashed = false`);
-            const fields = encodeURIComponent('files(id,name,mimeType)');
-            const endpoint = `https://www.googleapis.com/drive/v3/files?q=${query}&orderBy=name&pageSize=100&fields=${fields}&key=${photoGalleryConfig.apiKey}`;
-            const response = await fetch(endpoint);
-            if (!response.ok) throw new Error('Google Drive request failed');
+            const response = await fetch(photoGalleryConfig.galleryIndexUrl);
+            if (!response.ok) throw new Error('Gallery index not found');
 
-            const result = await response.json();
-            const photos = (result.files || []).filter(file => file.mimeType.startsWith('image/'));
-            if (!photos.length) {
-                showGalleryStatus('No photos found. Open the Google Drive folder');
+            const localImages = await response.json();
+            const galleryImages = (Array.isArray(localImages) ? localImages : [])
+                .map(name => `gallery/${name}`)
+                .filter(Boolean);
+
+            if (!galleryImages.length) {
+                showGalleryStatus('Open photo gallery in Google Drive');
                 return;
             }
 
-            driveGallery.innerHTML = `
-                <a class="drive-slideshow-link" href="${photoGalleryConfig.folderUrl}" target="_blank" rel="noopener noreferrer">
-                    <img class="drive-slideshow-image" alt="Photo gallery image">
-                    <div class="drive-slideshow-status">Open photo gallery in Google Drive</div>
-                </a>
-            `;
-
+            driveGallery.innerHTML = buildGalleryMarkup();
             const image = driveGallery.querySelector('.drive-slideshow-image');
             let currentPhoto = 0;
+
             const showPhoto = () => {
-                const photo = photos[currentPhoto];
+                const photo = galleryImages[currentPhoto];
                 image.style.opacity = '0';
                 window.setTimeout(() => {
-                    image.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(photo.id)}&sz=w1200`;
-                    image.alt = photo.name || 'Photo gallery image';
+                    image.src = photo;
+                    image.alt = `Gallery image ${currentPhoto + 1}`;
                     image.style.opacity = '1';
                 }, 180);
-                currentPhoto = (currentPhoto + 1) % photos.length;
+                currentPhoto = (currentPhoto + 1) % galleryImages.length;
             };
 
             showPhoto();
-            if (photos.length > 1) window.setInterval(showPhoto, 4500);
+            if (galleryImages.length > 1) {
+                window.setInterval(showPhoto, 4500);
+            }
         } catch (error) {
-            console.error('Google Drive gallery failed:', error);
-            showGalleryStatus('Gallery unavailable. Open the Google Drive folder');
+            console.error('Local gallery failed:', error);
+            showGalleryStatus('Open photo gallery in Google Drive');
         }
+    }
+
+    async function loadDriveGallery() {
+        if (!driveGallery) return;
+        await loadLocalGallery();
     }
 
     loadDriveGallery();
