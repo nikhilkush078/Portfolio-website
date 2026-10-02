@@ -1,5 +1,15 @@
 [
   {
+    "id": "mutual-induction-between-two-coaxial-coils-effect-of-induced-current-o-1790936158637",
+    "title": "Mutual Induction Between Two Coaxial Coils: Effect of Induced Current on the Voltage Across a Finite-Resistance Coil",
+    "description": "Two coils, (C_1) and (C_2), are placed coaxially with their axes aligned. The upper coil (C_1) is connected in series with an ideal battery of emf (V_1) and initially carries a steady current (I_1). Coil (C_1) has a finite resistance (R), and a voltmeter is connected directly across the two terminals of (C_1) to measure the voltage drop across the coil.\n\nThe lower coil (C_2) is connected to another ideal battery (V_2) through an initially open switch (S). When the switch (S) is closed, the current (I_2) in (C_2) starts increasing from zero. This changing current produces a changing magnetic flux through coil (C_1), thereby inducing an emf and an additional current in (C_1).\n\nAssume that the induced current in (C_1) is in the same direction as the existing current (I_1). Consequently, the total current through (C_1) temporarily increases while the current in (C_2) is changing.\n\nDetermine and explain:\n\nWhat happens to the total current through coil (C_1) immediately after switch (S) is closed?\nSince (C_1) has finite resistance (R), what happens to the resistive voltage drop (IR) across (C_1)?\nWhat voltage does the voltmeter connected across the terminals of (C_1) measure during this transient period?\nDoes the voltage across the coil necessarily remain equal to the ideal battery emf (V_1), or can it differ while the magnetic flux through (C_1) is changing?\nAfter the current in (C_2) reaches a steady value and its magnetic flux through (C_1) stops changing, what happens to the induced emf and the voltmeter reading?",
+    "category": "Observation",
+    "date": "2026-10-02",
+    "time": "15:44",
+    "day": "Friday",
+    "image": "images/articles/mutual-induction-between-two-coaxial-coils-effect-of-induced-current-o-1790936158637.png"
+  },
+  {
     "id": "why-does-the-measured-voltage-differ-between-star-and-open-delta-conne-1790671087854",
     "title": "Why Does the Measured Voltage Differ Between Star and Open-Delta Connections?",
     "description": "If each transformer winding is rated at 230 V, why does the voltmeter show approximately 400 V when measuring between two line terminals in the star (Y) connection, while it shows only 230 V when measuring across the open winding of the delta (Δ) connection? Both arrangements appear to have two windings involved between the measuring points. What causes this difference in voltage?",
